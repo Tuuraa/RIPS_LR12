@@ -1,0 +1,161 @@
+﻿@page "/sales-stats"
+@using System.Text.Json
+@attribute [StreamRendering(true)]
+@attribute [OutputCache(Duration = 5)]
+@inject WeatherApiClient SalesApi
+
+<PageTitle>Статистика продаж</PageTitle>
+
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-900 mb-6">Статистика продаж</h1>
+
+    @if (isLoading)
+    {
+        <div class="flex justify-center items-center h-64">
+            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+    }
+    else if (jsonDocument != null)
+    {
+        var root = jsonDocument.RootElement;
+        var componentsStats = root.GetProperty("componentsStats").EnumerateArray();
+
+        <!-- Общая статистика -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-medium text-gray-500 mb-2">Всего продаж</h3>
+                <p class="text-3xl font-bold text-blue-600">@root.GetProperty("totalSales").GetInt32()</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-medium text-gray-500 mb-2">Общая выручка</h3>
+                <p class="text-3xl font-bold text-green-600">@root.GetProperty("totalRevenue").GetDecimal().ToString("C")</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-medium text-gray-500 mb-2">Товаров</h3>
+                <p class="text-3xl font-bold text-purple-600">@root.GetProperty("totalProducts").GetInt32()</p>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-medium text-gray-500 mb-2">Средний чек</h3>
+                <p class="text-3xl font-bold text-orange-600">@root.GetProperty("averageOrderValue").GetDecimal().ToString("C")</p>
+            </div>
+        </div>
+
+        <!-- Детализация по товарам -->
+        <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-800">Продажи по товарам</h2>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Товар</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Производитель</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Продано</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Выручка</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Средняя цена</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Последняя продажа</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        @foreach (var item in componentsStats.OrderByDescending(c => c.GetProperty("totalRevenue").GetDecimal()))
+                        {
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">@item.GetProperty("componentId").GetInt32()</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-gray-900">@item.GetProperty("componentName").GetString()</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-500">@item.GetProperty("manufacturer").GetString()</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">@item.GetProperty("totalSold").GetInt32()</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm font-medium text-green-600">@item.GetProperty("totalRevenue").GetDecimal().ToString("C")</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-500">@item.GetProperty("averagePrice").GetDecimal().ToString("C")</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-500">@DateTime.Parse(item.GetProperty("lastSaleDate").GetString()).ToShortDateString()</div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Топ товаров -->
+        <div class="bg-white rounded-lg shadow p-6 mb-8">
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">Топ товаров по выручке</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @foreach (var item in componentsStats.OrderByDescending(c => c.GetProperty("totalRevenue").GetDecimal()).Take(6))
+                {
+                    <div class="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-medium text-gray-900">@item.GetProperty("componentName").GetString()</h3>
+                                <p class="text-sm text-gray-500">@item.GetProperty("manufacturer").GetString()</p>
+                            </div>
+                            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">#@item.GetProperty("componentId").GetInt32()</span>
+                        </div>
+                        <div class="mt-4 grid grid-cols-2 gap-2">
+                            <div>
+                                <p class="text-sm text-gray-500">Продано</p>
+                                <p class="font-medium">@item.GetProperty("totalSold").GetInt32()</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Выручка</p>
+                                <p class="font-medium text-green-600">@item.GetProperty("totalRevenue").GetDecimal().ToString("C")</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Средняя цена</p>
+                                <p class="font-medium">@item.GetProperty("averagePrice").GetDecimal().ToString("C")</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-500">Последняя</p>
+                                <p class="font-medium">@DateTime.Parse(item.GetProperty("lastSaleDate").GetString()).ToShortDateString()</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private JsonDocument? jsonDocument;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var data = await SalesApi.GetSalesStatisticsAsync();
+            if (data != null)
+            {
+                jsonDocument = JsonDocument.Parse(JsonSerializer.Serialize(data));
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading sales statistics: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    public void Dispose()
+    {
+        jsonDocument?.Dispose();
+    }
+}

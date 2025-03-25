@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "dgM2i/jsA05ey1OjTDzleYfmBqkHoAq3kRPiCe+YMag=",
+  "Source": "LR12.ApiService",
+  "BasePath": "_content/LR12.ApiService",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

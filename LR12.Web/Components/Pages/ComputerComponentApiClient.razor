@@ -1,0 +1,45 @@
+﻿@page "/components"
+@attribute [StreamRendering(true)]
+@attribute [OutputCache(Duration = 5)]
+@inject WeatherApiClient WeatherApi
+
+<PageTitle>Комплектующие ПК</PageTitle>
+
+<h3>Список комплектующих</h3>
+
+@if (components == null)
+{
+    <p>Загрузка...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Производитель</th>
+                <th>Тип</th>
+                <th>Цена</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in components)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Manufacturer</td>
+                    <td>@item.Price.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private ComputerComponent[]? components;
+
+    protected override async Task OnInitializedAsync()
+    {
+        components = await WeatherApi.GetComponentsAsync();
+    }
+}

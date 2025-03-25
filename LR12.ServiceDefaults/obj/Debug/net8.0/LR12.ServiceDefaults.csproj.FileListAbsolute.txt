@@ -1,0 +1,14 @@
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\bin\Debug\net8.0\LR12.ServiceDefaults.deps.json
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\bin\Debug\net8.0\LR12.ServiceDefaults.dll
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\bin\Debug\net8.0\LR12.ServiceDefaults.pdb
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\obj\Debug\net8.0\LR12.ServiceDefaults.csproj.AssemblyReference.cache
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\obj\Debug\net8.0\LR12.ServiceDefaults.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\obj\Debug\net8.0\LR12.ServiceDefaults.AssemblyInfoInputs.cache
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\obj\Debug\net8.0\LR12.ServiceDefaults.AssemblyInfo.cs
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\obj\Debug\net8.0\LR12.ServiceDefaults.csproj.CoreCompileInputs.cache
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\obj\Debug\net8.0\LR12.ServiceDefaults.dll
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\obj\Debug\net8.0\refint\LR12.ServiceDefaults.dll
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\obj\Debug\net8.0\LR12.ServiceDefaults.pdb
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\obj\Debug\net8.0\ref\LR12.ServiceDefaults.dll
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\bin\Debug\net8.0\LR12.ServiceDefaults.runtimeconfig.json
+C:\Users\turap\source\repos\LR12\LR12.ServiceDefaults\obj\Debug\net8.0\LR12.ServiceDefaults.genruntimeconfig.cache
